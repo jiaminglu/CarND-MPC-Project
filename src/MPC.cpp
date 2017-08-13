@@ -5,52 +5,6 @@
 
 using CppAD::AD;
 
-// TODO: Set the timestep length and duration
-const size_t N = 10;
-const double dt = 0.1;
-
-//control targets
-const double ref_cte = 0;
-const double ref_epsi = 0;
-const double ref_v = 75;
-
-//MPC parameters
-const double coeff_cte = 2000;
-const double coeff_epsi = 2000;
-const double coeff_v = 1;
-const double coeff_delta = 100;
-const double coeff_a = 10;
-const double coeff_d_delta = 100;
-const double coeff_d_a = 10;
-//The upper and lower limits of delta
-const double constr_delta = 0.436332;
-// Acceleration/decceleration upper and lower limits.
-const double constr_a = 1.0;
-
-// This value assumes the model presented in the classroom is used.
-//
-// It was obtained by measuring the radius formed by running the vehicle in the
-// simulator around in a circle with a constant steering angle and velocity on a
-// flat terrain.
-//
-// Lf was tuned until the the radius formed by the simulating the model
-// presented in the classroom matched the previous radius.
-//
-// This is the length from front to CoG that has a similar radius.
-const double Lf = 2.67;
-
-// The solver takes all the state variables and actuator
-// variables in a singular vector. Thus, we should to establish
-// when one variable starts and another ends to make our lifes easier.
-size_t x_start = 0;
-size_t y_start = x_start + N;
-size_t psi_start = y_start + N;
-size_t v_start = psi_start + N;
-size_t cte_start = v_start + N;
-size_t epsi_start = cte_start + N;
-size_t delta_start = epsi_start + N;
-size_t a_start = delta_start + N - 1;
-
 class FG_eval {
 public:
     // Fitted polynomial coefficients
