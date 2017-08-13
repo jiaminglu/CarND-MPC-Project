@@ -55,6 +55,17 @@ size_t epsi_start = cte_start + N;
 size_t delta_start = epsi_start + N;
 size_t a_start = delta_start + N - 1;
 
+struct Prediction {
+    vector<double> x;
+    vector<double> y;
+    vector<double> psi;
+    vector<double> v;
+    vector<double> cte;
+    vector<double> epsi;
+    vector<double> delta;
+    vector<double> a;
+};
+
 class MPC {
  public:
   MPC();
