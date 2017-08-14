@@ -129,13 +129,16 @@ int main() {
                     //solving mpc problem
                     auto solution = mpc.Solve(state, coeffs);
 
+                    //control inputs
                     double steer_value;
                     double throttle_value;
+                    steer_value = solution.delta[lat_idx];
+                    throttle_value = solution.a[lat_idx];
 
                     json msgJson;
                     // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
                     // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-                    msgJson["steering_angle"] = steer_value;
+                    msgJson["steering_angle"] = steer_value / deg2rad(25);
                     msgJson["throttle"] = throttle_value;
 
                     //Display the MPC predicted trajectory
@@ -144,6 +147,8 @@ int main() {
 
                     //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
                     // the points in the simulator are connected by a Green line
+                    mpc_x_vals = solution.x;
+                    mpc_y_vals = solution.y;
 
                     msgJson["mpc_x"] = mpc_x_vals;
                     msgJson["mpc_y"] = mpc_y_vals;
@@ -154,6 +159,10 @@ int main() {
 
                     //.. add (x,y) points to list here, points are in reference to the vehicle's coordinate system
                     // the points in the simulator are connected by a Yellow line
+                    for (unsigned i=0 ; i < ptsx_tf.size(); ++i) {
+                        next_x_vals.push_back(ptsx_tf(i));
+                        next_y_vals.push_back(ptsy_tf(i));
+                    }
 
                     msgJson["next_x"] = next_x_vals;
                     msgJson["next_y"] = next_y_vals;
@@ -170,7 +179,7 @@ int main() {
                     //
                     // NOTE: REMEMBER TO SET THIS TO 100 MILLISECONDS BEFORE
                     // SUBMITTING.
-                    this_thread::sleep_for(chrono::milliseconds(100));
+                    this_thread::sleep_for(chrono::milliseconds(latency));
                     ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
                 }
             } else {
