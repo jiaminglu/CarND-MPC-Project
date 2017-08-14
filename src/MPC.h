@@ -19,14 +19,14 @@ const int lat_idx = floor(double(latency) / 1000.0 / dt);
 //control targets
 //const double ref_cte = 0;
 //const double ref_epsi = 0;
-const double ref_v = 35;
+const double ref_v = 50;
 
 //MPC parameters
-const double coeff_cte = 10;
-const double coeff_epsi = 100;
+const double coeff_cte = 5;
+const double coeff_epsi = 30;
 const double coeff_v = 1;
 const double coeff_delta = 1000;
-const double coeff_a = 10;
+const double coeff_a = 1;
 const double coeff_d_delta = 600;
 const double coeff_d_a = 1;
 //The upper and lower limits of delta
