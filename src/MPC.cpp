@@ -122,7 +122,7 @@ public:
 //
 MPC::MPC():
     prev_delta_(0.0),
-    prev_a_(0.0)
+    prev_a_(0.1)
 {}
 MPC::~MPC() {}
 
