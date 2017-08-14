@@ -14,7 +14,7 @@ const double dt = 0.05;
 const int latency = 100;
 
 //number of control input from mpc prediction considering latency
-const int lat_idx = double(latency) / 1000 / dt;
+const int lat_idx = floor(double(latency) / 1000.0 / dt);
 
 //control targets
 //const double ref_cte = 0;
@@ -54,14 +54,17 @@ struct Prediction {
 };
 
 class MPC {
- public:
-  MPC();
+public:
+    double prev_delta_;
+    double prev_a_;
 
-  virtual ~MPC();
+    MPC();
 
-  // Solve the model given an initial state and polynomial coefficients.
-  // Return the first actuatotions.
-  Prediction Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs);
+    virtual ~MPC();
+
+    // Solve the model given an initial state and polynomial coefficients.
+    // Return the first actuatotions.
+    Prediction Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs);
 };
 
 #endif /* MPC_H */

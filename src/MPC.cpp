@@ -120,7 +120,10 @@ public:
 //
 // MPC class definition implementation.
 //
-MPC::MPC() {}
+MPC::MPC():
+    prev_delta_(0.0),
+    prev_a_(0.0)
+{}
 MPC::~MPC() {}
 
 Prediction MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
@@ -175,12 +178,23 @@ Prediction MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
         vars_lowerbound[i] = -constr_delta;
         vars_upperbound[i] = constr_delta;
     }
+    //latency constrains for steering control
+    for (int i = delta_start; i < delta_start+lat_idx; i++) {
+        vars_lowerbound[i] = prev_delta_;
+        vars_upperbound[i] = prev_delta_;
+    }
 
     // Acceleration/decceleration upper and lower limits.
     // NOTE: Feel free to change this to something else.
     for (int i = a_start; i < n_vars; i++) {
         vars_lowerbound[i] = -constr_a;
         vars_upperbound[i] = constr_a;
+    }
+
+    //latency constrains for acceleration
+    for (int i = a_start; i < a_start+lat_idx; i++) {
+        vars_lowerbound[i] = prev_a_;
+        vars_upperbound[i] = prev_a_;
     }
 
     // Lower and upper limits for the constraints

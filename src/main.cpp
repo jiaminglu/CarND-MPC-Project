@@ -91,6 +91,9 @@ int main() {
                     double py = j[1]["y"];
                     double psi = j[1]["psi"];
                     double v = j[1]["speed"];
+                    //previous control signals
+                    mpc.prev_delta_ = j[1]["steering_angle"];
+                    mpc.prev_a_ = j[1]["throttle"];
 
                     /*
                     * TODO: Calculate steering angle and throttle using MPC.
@@ -134,6 +137,8 @@ int main() {
                     double throttle_value;
                     steer_value = solution.delta[lat_idx];
                     throttle_value = solution.a[lat_idx];
+                    mpc.prev_delta_ = steer_value;
+                    mpc.prev_a_ = throttle_value;
 
                     json msgJson;
                     // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
