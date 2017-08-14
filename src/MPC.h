@@ -8,14 +8,17 @@ using namespace std;
 
 //timestep length and duration
 const size_t N = 10;
-const double dt = 0.1;
+const double dt = 0.05;
 
 //latency in ms
 const int latency = 100;
 
+//number of control input from mpc prediction considering latency
+const int lat_idx = double(latency) / 1000 / dt;
+
 //control targets
-const double ref_cte = 0;
-const double ref_epsi = 0;
+//const double ref_cte = 0;
+//const double ref_epsi = 0;
 const double ref_v = 75;
 
 //MPC parameters
@@ -58,10 +61,6 @@ size_t a_start = delta_start + N - 1;
 struct Prediction {
     vector<double> x;
     vector<double> y;
-    vector<double> psi;
-    vector<double> v;
-    vector<double> cte;
-    vector<double> epsi;
     vector<double> delta;
     vector<double> a;
 };
@@ -74,7 +73,7 @@ class MPC {
 
   // Solve the model given an initial state and polynomial coefficients.
   // Return the first actuatotions.
-  vector<double> Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs);
+  Prediction Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs);
 };
 
 #endif /* MPC_H */
