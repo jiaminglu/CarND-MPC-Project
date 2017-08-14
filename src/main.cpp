@@ -91,9 +91,6 @@ int main() {
                     double py = j[1]["y"];
                     double psi = j[1]["psi"];
                     double v = j[1]["speed"];
-                    //previous control signals
-                    mpc.prev_delta_ = j[1]["steering_angle"];
-                    mpc.prev_a_ = j[1]["throttle"];
 
                     /*
                     * TODO: Calculate steering angle and throttle using MPC.
@@ -103,8 +100,8 @@ int main() {
                     */
 
                     //initialize transformed vectors for waypoints in car frame
-                    Eigen::VectorXd ptsx_tf = Eigen::VectorXd::Map(ptsx.data(), 8);
-                    Eigen::VectorXd ptsy_tf = Eigen::VectorXd::Map(ptsy.data(), 8);
+                    Eigen::VectorXd ptsx_tf = Eigen::VectorXd::Map(ptsx.data(), ptsx.size());
+                    Eigen::VectorXd ptsy_tf = Eigen::VectorXd::Map(ptsy.data(), ptsx.size());
 
                     //trigonometric precalculation for optimization
                     double cos_psi = cos(psi);
@@ -112,8 +109,8 @@ int main() {
 
                     //transformation
                     for (int i = 0; i < ptsx_tf.size(); i++) {
-                        double x = ptsx_tf[i]-px;
-                        double y = ptsy_tf[i]-py;
+                        double x = ptsx[i]-px;
+                        double y = ptsy[i]-py;
                         ptsx_tf[i] = x * cos_psi + y * sin_psi;
                         ptsy_tf[i] = -x * sin_psi + y * cos_psi;
                     }
@@ -143,7 +140,7 @@ int main() {
                     json msgJson;
                     // NOTE: Remember to divide by deg2rad(25) before you send the steering value back.
                     // Otherwise the values will be in between [-deg2rad(25), deg2rad(25] instead of [-1, 1].
-                    msgJson["steering_angle"] = steer_value / deg2rad(25);
+                    msgJson["steering_angle"] = -steer_value / deg2rad(25);
                     msgJson["throttle"] = throttle_value;
 
                     //Display the MPC predicted trajectory
