@@ -1,6 +1,6 @@
 # CarND-Controls-MPC
 
-##Overview
+## Overview
 In this project model predictive control (MPC) technique is used to control steering and acceleration of a car in simulator. MPC requires model of controlled object (vehicle) and some information about environment (trajectory of track central line in front of the vehicle) to calculate control inputs.
 
 ## Vehicle model
